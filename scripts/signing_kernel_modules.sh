@@ -54,8 +54,13 @@ if [ ! -f ${PEM_PRIVATE_KEY} ]; then
     exit 1
 fi
 
-if [ -z ${LOCAL_SIGN_FILE} ]; then
-    LOCAL_SIGN_FILE="/usr/lib/linux-kbuild-${LINUX_KERNEL_VERSION}/scripts/sign-file"
+if [ -z "${LOCAL_SIGN_FILE}" ]; then
+    if [ -n "${LINUX_KERNEL_VERSION}" ]; then
+        LOCAL_SIGN_FILE="/usr/lib/linux-kbuild-${LINUX_KERNEL_VERSION}/scripts/sign-file"
+    else
+        # Backward compatibility for old callers relying on environment variables.
+        LOCAL_SIGN_FILE="/usr/lib/linux-kbuild-${KERNEL_VERSION}${KERNEL_ABISUFFIX}/scripts/sign-file"
+    fi
 fi
 
 if [ ! -f ${LOCAL_SIGN_FILE} ]; then
@@ -64,8 +69,21 @@ if [ ! -f ${LOCAL_SIGN_FILE} ]; then
     exit 1
 fi
 
-if [ -z ${LOCAL_EXTRACT_CERT} ]; then
-    LOCAL_EXTRACT_CERT="/usr/lib/linux-kbuild-${LINUX_KERNEL_VERSION}/certs/extract-cert"
+if [ -z "${LOCAL_EXTRACT_CERT}" ]; then
+   if [ -n "${LINUX_KERNEL_VERSION}" ]; then
+       LOCAL_EXTRACT_CERT="/usr/lib/linux-kbuild-${LINUX_KERNEL_VERSION}/certs/extract-cert"
+   else
+       # Backward compatibility for old callers relying on environment variables.
+       LOCAL_EXTRACT_CERT="/usr/lib/linux-kbuild-${KERNEL_VERSION}${KERNEL_ABISUFFIX}/certs/extract-cert"
+   fi
+
+   if [ ! -f "${LOCAL_EXTRACT_CERT}" ]; then
+	   if [ -n "${LINUX_KERNEL_VERSION}" ]; then
+	       LOCAL_EXTRACT_CERT="/usr/lib/linux-kbuild-${LINUX_KERNEL_VERSION}/scripts/extract-cert"
+	   else
+	       LOCAL_EXTRACT_CERT="/usr/lib/linux-kbuild-${KERNEL_VERSION}${KERNEL_ABISUFFIX}/scripts/extract-cert"
+	   fi
+   fi
 fi
 
 if [ ! -f ${LOCAL_EXTRACT_CERT} ]; then
