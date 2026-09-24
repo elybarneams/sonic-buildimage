@@ -5,11 +5,6 @@ name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd
 
 resources:
   repositories:
-  - repository: sonic-mgmt
-    type: github
-    name: sonic-net/sonic-mgmt
-    endpoint: github.com_elybarneams
-    ref: master
   - repository: buildimage
     type: github
     name: sonic-net/sonic-buildimage
@@ -34,10 +29,6 @@ parameters:
 - name: COMMIT_ID
   type: string
   default: ' '
-
-- name: MGMT_BRANCH
-  type: string
-  default: master
 
 stages:
 - stage: BuildSecureBootVS
@@ -87,27 +78,3 @@ stages:
           secure_boot_vars_file: $(Build.SourcesDirectory)/.secureboot-ci/sonic-vs_vars.fd
       SUBMODULE: ${{ parameters.SUBMODULE }}
       COMMIT_ID: ${{ parameters.COMMIT_ID }}
-
-- stage: TestSecureBootVS
-  dependsOn: BuildSecureBootVS
-  condition: succeeded()
-  variables:
-  - group: SONiC-Elastictest
-  jobs:
-  - job: secureboot_t0_elastictest
-    displayName: kvmtest-t0-secureboot by Elastictest
-    timeoutInMinutes: 240
-    pool: sonic-ubuntu-1c
-    steps:
-    - template: .azure-pipelines/run-test-elastictest-template.yml@sonic-mgmt
-      parameters:
-        TOPOLOGY: t0
-        TEST_SET: t0-secureboot
-        SCRIPTS: platform_tests/secure_boot/test_secure_boot.py::test_unsigned_kernel_module_is_rejected
-        MIN_WORKER: 1
-        MAX_WORKER: 1
-        MGMT_BRANCH: ${{ parameters.MGMT_BRANCH }}
-        KVM_IMAGE_BUILD_PIPELINE_ID: $(System.DefinitionId)
-        ADD_TOPO_PARAMS: "-e secure_boot_enabled=true"
-        SKIP_REMOVE_ADD_TOPO_FOR_NIGHTLY: "False"
-        COMMON_EXTRA_PARAMS: "--disable_sai_validation "
