@@ -8,12 +8,12 @@ resources:
   - repository: sonic-mgmt
     type: github
     name: sonic-net/sonic-mgmt
-    endpoint: sonic-net
+    endpoint: github.com_elybarneams
     ref: master
   - repository: buildimage
     type: github
     name: sonic-net/sonic-buildimage
-    endpoint: sonic-net
+    endpoint: github.com_elybarneams
     ref: master
 
 variables:
