@@ -44,6 +44,7 @@ stages:
         clean: true
         submodules: recursive
         fetchDepth: 0
+        path: s
         displayName: Checkout code
       - bash: |
           set -euo pipefail
