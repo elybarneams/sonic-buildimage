@@ -48,11 +48,13 @@ stages:
       - bash: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y efitools ovmf python3-pip
-          python3 -m pip install --user virt-firmware==26.5.4
-          export PATH="$HOME/.local/bin:$PATH"
-
           secureboot_dir="$(Build.SourcesDirectory)/.secureboot-ci"
+          sudo apt-get install -y efitools ovmf python3-venv
+          python3 -m venv "$secureboot_dir/venv"
+          "$secureboot_dir/venv/bin/python" -m pip install \
+            --disable-pip-version-check virt-firmware==26.5.4
+          export PATH="$secureboot_dir/venv/bin:$PATH"
+
           scripts/generate_secureboot_vs_artifacts.sh \
             --workdir "$secureboot_dir" \
             --output-vars "$secureboot_dir/sonic-vs_vars.fd" \
