@@ -167,13 +167,13 @@ jobs:
             if [ "$(secure_boot_image)" == "yes" ]; then
               make $BUILD_OPTIONS target/sonic-vs.img.gz
               test -f "$(secure_boot_vars_file)"
-              test -f target/sonic-vs-uefi.img.gz
-              test -f target/sonic-vs-uefi_vars.fd
-              mv target/sonic-vs-uefi.img.gz target/sonic-vs.img.gz
+              test -f target/sonic-vs.img-uefi.img.gz
+              test -f target/sonic-vs.img-uefi_vars.fd
+              mv target/sonic-vs.img-uefi.img.gz target/sonic-vs.img.gz
               secure_boot_dir="$(dirname "$(secure_boot_vars_file)")"
               scripts/generate_secureboot_vs_artifacts.sh \
                 --workdir "$secure_boot_dir" \
-                --ovmf-vars target/sonic-vs-uefi_vars.fd \
+                --ovmf-vars target/sonic-vs.img-uefi_vars.fd \
                 --output-vars target/sonic-vs_vars.fd \
                 --build-id "$(Build.BuildId)" \
                 --reuse-keys
