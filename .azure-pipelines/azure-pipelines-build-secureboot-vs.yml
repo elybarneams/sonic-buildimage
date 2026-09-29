@@ -54,6 +54,7 @@ stages:
           python3 -m venv "$secureboot_dir/venv"
           "$secureboot_dir/venv/bin/python" -m pip install \
             --disable-pip-version-check virt-firmware==26.5.4
+          echo "##vso[task.prependpath]$secureboot_dir/venv/bin"
           export PATH="$secureboot_dir/venv/bin:$PATH"
 
           scripts/generate_secureboot_vs_artifacts.sh \
