@@ -73,7 +73,12 @@ EFI_SIGNING=scripts/efi-sign.sh
 # ######################################
 # Signing EFI files: mm, shim, grub
 # #####################################
-efi_file_list=$(sudo find ${KERNEL_MODULES_DIR} -name "*.efi")
+efi_file_list=$(sudo find "$FS_ROOT" -type f -name "*.efi")
+
+if [ -z "$efi_file_list" ]; then
+    echo "ERROR: no EFI files found under $FS_ROOT"
+    exit 1
+fi
 
 for efi in $efi_file_list
 do
