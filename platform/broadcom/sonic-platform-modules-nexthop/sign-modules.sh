@@ -36,9 +36,9 @@ die() {
 }
 
 if [ "${SECURE_UPGRADE_MODE}" = "dev" ]; then
-  ${PROJECT_ROOT}/scripts/signing_kernel_modules.sh -l ${KVERSION} -c ${SECURE_UPGRADE_SIGNING_CERT} -p ${SECURE_UPGRADE_DEV_SIGNING_KEY} -k ${1} || die "Kernel module signing failed (dev)"
+  ${PROJECT_ROOT}/scripts/signing_kernel_modules.sh -l ${KERNEL_VERSION}${KERNEL_ABISUFFIX} -c ${SECURE_UPGRADE_SIGNING_CERT} -p ${SECURE_UPGRADE_DEV_SIGNING_KEY} -k ${1} || die "Kernel module signing failed (dev)"
 elif [ "${SECURE_UPGRADE_MODE}" = "prod" ]; then
-  ${PROJECT_ROOT}/${SECURE_UPGRADE_PROD_SIGNING_TOOL} ${SECURE_UPGRADE_PROD_TOOL_ARGS} -a ${CONFIGURED_ARCH} -l ${KVERSION} -r ${1} || die "Kernel module signing failed (prod)"
+  ${PROJECT_ROOT}/${SECURE_UPGRADE_PROD_SIGNING_TOOL} ${SECURE_UPGRADE_PROD_TOOL_ARGS} -a ${CONFIGURED_ARCH} -l ${KERNEL_VERSION}${KERNEL_ABISUFFIX} -r ${1} || die "Kernel module signing failed (prod)"
 elif [ "${SECURE_UPGRADE_MODE}" = "no_sign" ]; then
   # Do nothing
   echo "No kernel module signing requested"
